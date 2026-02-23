@@ -1,11 +1,11 @@
 {
-	"id": "sample-plugin",
-	"name": "Sample Plugin",
+	"id": "qq-chat",
+	"name": "qq-auto-chatter",
 	"version": "1.0.0",
 	"minAppVersion": "0.15.0",
-	"description": "Demonstrates some of the capabilities of the Obsidian API.",
-	"author": "Obsidian",
-	"authorUrl": "https://obsidian.md",
-	"fundingUrl": "https://obsidian.md/pricing",
+	"description": "Make each line like a Msg of qq",
+	"author": "SnowFox4004",
+	"authorUrl": "https://github.com/SnowFox4004",
+	"fundingUrl": "https://space.bilibili.com/475690972",
 	"isDesktopOnly": false
 }
