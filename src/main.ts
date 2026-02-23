@@ -92,62 +92,66 @@ export default class MyPlugin extends Plugin {
 		// If the plugin hooks up any global DOM events (on parts of the app that doesn't belong to this plugin)
 		// Using this function will automatically remove the event listener when this plugin is disabled.
 		this.registerDomEvent(document, "keyup", (evt: KeyboardEvent) => {
-			if (!this.isEnabledAutoReplace()) return;
-			if (evt.key == "Enter") {
-				const view =
-					this.app.workspace.getActiveViewOfType(MarkdownView);
-				if (view) {
-					const markdownEditor = view.editor;
-					const cursor = markdownEditor.getCursor();
+			setTimeout(() => {
+				if (!this.isEnabledAutoReplace()) return;
+				if (evt.key == "Enter") {
+					const view =
+						this.app.workspace.getActiveViewOfType(MarkdownView);
+					if (view) {
+						const markdownEditor = view.editor;
+						const cursor = markdownEditor.getCursor();
 
-					let last_line = markdownEditor.getLine(cursor.line - 1);
+						let last_line = markdownEditor.getLine(cursor.line - 1);
 
-					// let full_content = markdownEditor.getValue().split("\n");
-					let hasFoundChat = false;
-					let target_line = -1;
+						// let full_content = markdownEditor.getValue().split("\n");
+						let hasFoundChat = false;
+						let target_line = -1;
 
-					for (
-						let lineno = 0;
-						lineno < markdownEditor.lastLine();
-						lineno++
-					) {
-						let line_content = markdownEditor.getLine(lineno);
-						if (line_content.trim().startsWith("```chat-qq")) {
-							hasFoundChat = true;
+						for (
+							let lineno = 0;
+							lineno < markdownEditor.lastLine();
+							lineno++
+						) {
+							let line_content = markdownEditor.getLine(lineno);
+							if (line_content.trim().startsWith("```chat-qq")) {
+								hasFoundChat = true;
+							}
+
+							if (hasFoundChat && line_content == "```") {
+								target_line = lineno;
+								break;
+							}
 						}
 
-						if (hasFoundChat && line_content == "```") {
-							target_line = lineno;
-							break;
-						}
+						// construct msg format
+						let currentTime = moment().format(
+							"YYYY-MM-DD HH:mm:ss",
+						);
+						let newMsg = `\n我 ${currentTime}\n` + last_line + "\n";
+
+						let originCursorPos = markdownEditor.getCursor();
+						let prev_line = { ...originCursorPos };
+						prev_line.line -= 1;
+
+						markdownEditor.replaceRange("", prev_line, {
+							line: prev_line.line,
+							ch: prev_line.ch + last_line.length,
+						});
+						markdownEditor.setCursor(target_line, 0);
+						markdownEditor.replaceRange(
+							newMsg,
+							markdownEditor.getCursor(),
+						);
+						markdownEditor.setCursor(
+							originCursorPos.line + 2,
+							originCursorPos.ch,
+						);
+
+						new Notice(window.process.platform);
 					}
-
-					// construct msg format
-					let currentTime = moment().format("YYYY-MM-DD HH:mm:ss");
-					let newMsg = `\n我 ${currentTime}\n` + last_line + "\n";
-
-					let originCursorPos = markdownEditor.getCursor();
-					let prev_line = { ...originCursorPos };
-					prev_line.line -= 1;
-
-					markdownEditor.replaceRange("", prev_line, {
-						line: prev_line.line,
-						ch: prev_line.ch + last_line.length,
-					});
-					markdownEditor.setCursor(target_line, 0);
-					markdownEditor.replaceRange(
-						newMsg,
-						markdownEditor.getCursor(),
-					);
-					markdownEditor.setCursor(
-						originCursorPos.line + 2,
-						originCursorPos.ch,
-					);
-
-					new Notice(window.process.platform);
 				}
-			}
-			// new Notice(evt.key);
+				// new Notice(evt.key);
+			}, 200);
 		});
 
 		// When registering intervals, this function will automatically clear the interval when the plugin is disabled.
