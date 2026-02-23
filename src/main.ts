@@ -91,7 +91,7 @@ export default class MyPlugin extends Plugin {
 
 		// If the plugin hooks up any global DOM events (on parts of the app that doesn't belong to this plugin)
 		// Using this function will automatically remove the event listener when this plugin is disabled.
-		this.registerDomEvent(document, "keydown", (evt: KeyboardEvent) => {
+		this.registerDomEvent(document, "keyup", (evt: KeyboardEvent) => {
 			if (!this.isEnabledAutoReplace()) return;
 			if (evt.key == "Enter") {
 				const view =
@@ -143,7 +143,8 @@ export default class MyPlugin extends Plugin {
 						originCursorPos.line + 2,
 						originCursorPos.ch,
 					);
-					new Notice(last_line);
+
+					new Notice(window.process.platform);
 				}
 			}
 			// new Notice(evt.key);
