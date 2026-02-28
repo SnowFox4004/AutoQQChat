@@ -1,7 +1,7 @@
 {
 	"id": "qq-chat",
 	"name": "qq-auto-chatter",
-	"version": "1.0.0",
+	"version": "1.4.0",
 	"minAppVersion": "0.15.0",
 	"description": "Make each line like a Msg of qq",
 	"author": "SnowFox4004",

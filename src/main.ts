@@ -23,10 +23,11 @@ export default class MyPlugin extends Plugin {
 	isEnabledAutoReplace() {
 		if (!this.enableReplace) return false;
 
-		return true;
+		return true; 
 	}
 	async onload() {
 		await this.loadSettings();
+		this.enableReplace = this.settings.autoEnableReplace;
 
 		// This creates an icon in the left ribbon.
 		// this.addRibbonIcon("dice", "Sample", (evt: MouseEvent) => {
@@ -148,10 +149,16 @@ export default class MyPlugin extends Plugin {
 						);
 
 						new Notice(window.process.platform);
+						let qqDialog = document.querySelector(
+							"div .block-language-chat-qq",
+						);
+
+						qqDialog?.scrollTo(0, qqDialog.scrollHeight);
+						if (!qqDialog) new Notice("未找到聊天对话框");
 					}
 				}
 				// new Notice(evt.key);
-			}, 200);
+			}, 150);
 		});
 
 		// When registering intervals, this function will automatically clear the interval when the plugin is disabled.
